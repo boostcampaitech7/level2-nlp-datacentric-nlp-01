@@ -1,8 +1,7 @@
 # Level2-nlp-datacentric-project
 
 ## 0. Workflow
-![](/data/ephemeral/home/hsk/level2-nlp-datacentric-nlp-01/etc/image_work_flow.png)
-
+![image_work_flow](https://github.com/user-attachments/assets/0f130239-cf61-4fce-8ffc-959f7c2ce12c)
 
 ## 1. 파일구성
 ```
