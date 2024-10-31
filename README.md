@@ -6,17 +6,26 @@
 ## 1. 파일구성
 ```
 level2-nlp-datacentric-nlp-01/
-├── src/
-│   ├── config.py                # 경로 및 설정 상수
-│   ├── dataset.py               # 데이터셋 클래스 정의
-│   ├── model.py                 # 모델 로드 및 초기화
-│   ├── train.py                 # 훈련 스크립트
-│   ├── evaluate.py              # 테스트 데이터 예측 스크립트
-│   └── utils.py                 # 보조 함수 및 메트릭 계산 함수
-├── data/
-│   ├── train.csv                # 학습 데이터 (직접 넣을 것)
-│   └── test.csv                 # 테스트 데이터 (직접 넣을 것)
-└── main.py                      # 메인 실행 파일
+|-- README.md
+|-- data
+|-- etc
+|   `-- image_work_flow.png
+|-- main.py                                     # 메인 실행 파일
+|-- requirements.txt                            # 필요한 패키지 목록
+|-- src
+   |-- config.py
+   |-- data_control
+   |   |-- augmentation
+   |   |-- label_corrector                      # 레이블 교정 모듈
+   |   |-- noise_converter                      # 노이즈 변환 모듈
+   |   |-- noise_detector                       # 노이즈 탐지 모듈
+   |   `-- noise_generator                      # 노이즈 생성 모듈 (prompting 용도)
+   |       
+   |-- dataset.py                               # 데이터셋 로딩 및 처리 모듈
+   |-- evaluate.py                              # 모델 평가 모듈
+   |-- model.py                                 # 모델 정의
+   |-- train.py                                 # 학습
+   `-- utils.py                                 # compute_metrics 등 utils 폴더
 
 ```
 
