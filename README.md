@@ -15,7 +15,7 @@ level2-nlp-datacentric-nlp-01/
 |-- src
    |-- config.py
    |-- data_control
-   |   |-- augmentation
+   |   |-- augmentation                         # 데이터 증강 모듈
    |   |-- label_corrector                      # 레이블 교정 모듈
    |   |-- noise_converter                      # 노이즈 변환 모듈
    |   |-- noise_detector                       # 노이즈 탐지 모듈
