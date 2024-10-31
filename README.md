@@ -1,4 +1,4 @@
-# Level2-nlp-datacentric-project
+# Level2-nlp-data_centric-project
 
 ## 0. Workflow
 <img src= "https://github.com/user-attachments/assets/0f130239-cf61-4fce-8ffc-959f7c2ce12c" width="700" height="300" />
