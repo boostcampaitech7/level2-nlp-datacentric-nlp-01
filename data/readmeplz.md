@@ -1,0 +1,1 @@
+# 이 폴더에 test.csv, train.csv 넣어주세요 ~

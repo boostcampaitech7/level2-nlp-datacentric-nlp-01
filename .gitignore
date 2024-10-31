@@ -1,0 +1,6 @@
+data/test.csv
+data/train.csv
+output/
+wandb/
+
+__pycache__/
