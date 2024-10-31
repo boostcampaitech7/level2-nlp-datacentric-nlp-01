@@ -13,7 +13,7 @@ level2-nlp-datacentric-nlp-01/
 |-- main.py                                     # 메인 실행 파일
 |-- requirements.txt                            # 필요한 패키지 목록
 |-- src
-   |-- config.py
+   |-- config.py                                # 경로 등 기본 설정
    |-- data_control
    |   |-- augmentation                         # 데이터 증강 모듈
    |   |-- label_corrector                      # 레이블 교정 모듈
