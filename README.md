@@ -1,7 +1,7 @@
 # Level2-nlp-datacentric-project
 
 ## 0. Workflow
-![image_work_flow](https://github.com/user-attachments/assets/0f130239-cf61-4fce-8ffc-959f7c2ce12c)
+<img src= "https://github.com/user-attachments/assets/0f130239-cf61-4fce-8ffc-959f7c2ce12c" width="650" height="400" />
 
 ## 1. 파일구성
 ```
