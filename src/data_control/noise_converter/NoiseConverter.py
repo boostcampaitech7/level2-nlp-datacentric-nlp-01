@@ -3,6 +3,7 @@ import pandas as pd
 
 class NoiseConverter(ABC):
     
+    @abstractmethod
     def convert(self, df: pd.DataFrame) -> pd.DataFrame:
         """dataframe의 모든 행에 noise가 있다고 가정하고, 
            모든 행의 noise를 복원한다.
