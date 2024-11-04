@@ -20,7 +20,7 @@ class NoiseDetectorASCII(NoiseDetector):
         Returns:
             bool: noise이면 True, 아니면 False
         """
-        ascii_ratio = sum([31 < ord(c) and ord(c) < 177 for c in x['text']]) / len(x)
+        ascii_ratio = sum([(32 <= ord(c) and ord(c) <= 63) or (96 <= ord(c) and ord(c) <= 126) for c in x['text']]) / len(x["text"])
         return ascii_ratio >= self.ascii_threshold
     
     def detect(self, df: pd.DataFrame) -> pd.DataFrame:
