@@ -52,3 +52,4 @@ trainer = Trainer(
 )
 
 trainer.train()
+trainer.save_model(os.path.join(OUTPUT_DIR, 'model'))
