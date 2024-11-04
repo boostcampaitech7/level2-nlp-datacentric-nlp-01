@@ -8,15 +8,15 @@ from datasets import load_dataset, Dataset
 from googletrans import Translator
 import time
 import deepl
+from Augmentor import Augmentor
 
-class BackTranslator:
-    def __init__(self, type="google", loop=1, df=None, lang="en", batch_size=16, deepl_api_key=None):
+class BackTranslator(Augmentor):
+    def __init__(self, type="google", loop=1, lang="en", batch_size=16, deepl_api_key=None):
         """
         BackTranslator 초기화
         Args:
             type (str): 번역기 종류 ("google" 또는 "deepl")
             loop (int): 역번역 반복 횟수
-            df (Dataset): 증강할 데이터셋
             lang (str): 중간 번역 언어 코드
             batch_size (int): 배치 크기
             deepl_api_key (str): DeepL API 키
@@ -24,7 +24,6 @@ class BackTranslator:
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.type = type
         self.loop = loop
-        self.df = df
         self.lang = lang
         self.batch_size = batch_size
         self.deepl_api_key = deepl_api_key
@@ -100,20 +99,17 @@ class BackTranslator:
                 translated_texts.append(text)
         return translated_texts
 
-    def augment(self, save_path=None):
+    def augment(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         데이터셋 증강 수행
         Args:
-            save_path (str, optional): 저장할 파일 경로
+            df (pd.DataFrame): augmentation을 적용할 dataframe
         Returns:
-            Dataset: 증강된 데이터셋
+            pd.DataFrame: augmentation이 적용된 dataframe
         """
-        if self.df is None:
-            raise ValueError("데이터셋이 제공되지 않았습니다.")
-
-        target_ids = self.df['ID']
-        target_docs = self.df['text']
-        target_labels = self.df['target']
+        target_ids = df['ID']
+        target_docs = df['text']
+        target_labels = df['target']
 
         # 배치 처리 및 번역
         batches = self._chunk_batch(target_docs)
@@ -124,70 +120,51 @@ class BackTranslator:
             augmented_text.extend(self._back_translate(batch))
 
         # 증강된 데이터셋 생성
-        last_id_num = int(target_ids[-1].split('_')[-1])
+        last_id_num = int(target_ids.iloc[-1].split('_')[-1])
         new_ids = [f"ynat-v1_train_{str(i).zfill(5)}" 
                   for i in range(last_id_num + 1, last_id_num + len(target_ids) + 1)]
         
-        augmented_dataset = Dataset.from_pandas(pd.DataFrame({
+        augmented_df = pd.DataFrame({
             'ID': new_ids,
             'text': augmented_text,
             'target': target_labels
-        }))
+        })
 
-        # 원본 데이터와 병합
-        merged_train = pd.concat([
-            self.df.to_pandas(), 
-            augmented_dataset.to_pandas()
-        ], ignore_index=True)
-        
-        merged_dataset = Dataset.from_pandas(merged_train)
-        
-        # 저장
-        if save_path:
-            merged_train.to_csv(save_path, index=False)
-            print(f"증강된 데이터셋이 {save_path}에 저장되었습니다.")
-        
-        print("데이터셋 증강 완료:")
-        print(merged_dataset)
-        
-        return merged_dataset
+        # 원본 데이터와 병합하여 반환
+        return pd.concat([df, augmented_df], ignore_index=True)
 
 def test_augmentation():
     """테스트를 위한 실행 함수"""
     print("Back Translation 테스트 시작")
 
     # 테스트 데이터셋 로드
-    test_df = load_dataset(
-        'csv', 
-        data_files='/data/ephemeral/home/ksw/level2-nlp-datacentric-nlp-01/data/train.csv'
-    )['train']
+    test_df = pd.read_csv('/data/ephemeral/home/ksw/level2-nlp-datacentric-nlp-01/data/train.csv')
+    
 
     # 테스트 케이스 1: Google 번역, 영어
     print("\n테스트 1: Google 번역 (한국어 -> 영어 -> 한국어)")
     bt_google = BackTranslator(
         type="google",
         loop=1,
-        df=test_df,
         lang="en",
         batch_size=16
     )
-    augmented_dataset = bt_google.augment(
-        save_path='/data/ephemeral/home/ksw/level2-nlp-datacentric-nlp-01/data/train_augmented_google_en_1loop.csv'
-    )
+    augmented_df = bt_google.augment(test_df)
+    augmented_df.to_csv('/data/ephemeral/home/ksw/level2-nlp-datacentric-nlp-01/data/train_augmented_google_en_1loop.csv', 
+                        index=False)
     
     # 테스트 케이스 2: Google 번역, 일본어
     print("\n테스트 2: Google 번역 (한국어 -> 일본어 -> 한국어)")
     bt_google_ja = BackTranslator(
         type="google",
         loop=1,
-        df=test_df,
         lang="ja",
         batch_size=16
     )
-    augmented_dataset = bt_google_ja.augment(
-        save_path='/data/ephemeral/home/ksw/level2-nlp-datacentric-nlp-01/data/train_augmented_google_ja_1loop.csv'
-    )
-
+    augmented_df = bt_google_ja.augment(test_df)
+    augmented_df.to_csv('/data/ephemeral/home/ksw/level2-nlp-datacentric-nlp-01/data/train_augmented_google_ja_1loop.csv', 
+                        index=False)
+    
 
     DEEPL_API_KEY = ""  # DeepL API 키 입력
     # 테스트 케이스 3: DeepL 번역, 영어
@@ -195,28 +172,28 @@ def test_augmentation():
     bt_deepl = BackTranslator(
         type="deepl",
         loop=1,
-        df=test_df,
         lang="en",
         batch_size=16,
         deepl_api_key=DEEPL_API_KEY  # API 키 전달
     )
-    augmented_dataset = bt_deepl.augment(
-        save_path='/data/ephemeral/home/ksw/level2-nlp-datacentric-nlp-01/data/train_augmented_deepl_en_1loop.csv'
-    )
+    augmented_df = bt_deepl.augment(test_df)
+    augmented_df.to_csv('/data/ephemeral/home/ksw/level2-nlp-datacentric-nlp-01/data/train_augmented_deepl_en_1loop.csv', 
+                        index=False)
+                      
 
     # 테스트 케이스 4: DeepL 번역, 일본어
-    print("\n테스트 3: DeepL 번역 (한국어 -> 일본어 -> 한국어)")
+    print("\n테스트 4: DeepL 번역 (한국어 -> 일본어 -> 한국어)")
     bt_deepl = BackTranslator(
         type="deepl",
         loop=1,
-        df=test_df,
         lang="ja",
         batch_size=16,
         deepl_api_key=DEEPL_API_KEY
     )
-    augmented_dataset = bt_deepl.augment(
-        save_path='/data/ephemeral/home/ksw/level2-nlp-datacentric-nlp-01/data/train_augmented_deepl_ja_1loop.csv'
-    )
+    augmented_df = bt_deepl.augment(test_df)
+    augmented_df.to_csv('/data/ephemeral/home/ksw/level2-nlp-datacentric-nlp-01/data/train_augmented_deepl_ja_1loop.csv', 
+                        index=False)
+    
 
 if __name__ == "__main__":
     test_augmentation()
