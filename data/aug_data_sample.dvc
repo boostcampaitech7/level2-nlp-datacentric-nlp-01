@@ -1,0 +1,6 @@
+outs:
+- md5: 2877b4c4047a1bb4ff78877c87306489.dir
+  size: 416231
+  nfiles: 5
+  hash: md5
+  path: aug_data_sample
