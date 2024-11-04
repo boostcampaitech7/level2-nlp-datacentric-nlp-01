@@ -101,7 +101,8 @@ class EasyDataAugmentation(Augmentor):
             
             # 원본 데이터와 augmented 데이터를 합침
             result_df = pd.concat([augmented_df, augmented_data], ignore_index=True)
+            # DataFrame의 행을 섞음
+            result_df = result_df.sample(frac=1, random_state=42).reset_index(drop=True)
             return result_df
-            # return augmented_data
         
         return augmented_df
