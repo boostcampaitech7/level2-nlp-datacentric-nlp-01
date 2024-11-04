@@ -5,7 +5,7 @@ from typing import Optional
 
 class NoiseGeneratorASCII(NoiseGenerator):
     
-    def __init__(self, ratio: Optional[float], 
+    def __init__(self, ratio: Optional[float] = None, 
                  min_ratio: float = 0.2, 
                  max_ratio: float = 0.8):
         """문자열의 일정 비율을 ASCII로 변환하여 noise를 추가한다.
@@ -23,27 +23,32 @@ class NoiseGeneratorASCII(NoiseGenerator):
             self.min_ratio = min_ratio
             self.max_ratio = max_ratio
             
-    def _add_noise(self, x: pd.Series) -> str:
+    def _add_noise(self, x: str) -> str:
         """문자열에 noise를 추가한다.
 
         Args:
-            x (pd.Series): 행 데이터 
+            x (str): 임의의 문자열
 
         Returns:
             str: noise가 추가된 문자열
         """
         ratio = np.random.uniform(self.min_ratio, self.max_ratio)
-        noise_len = int(len(x['text']) * ratio)
-        noise_indicator = np.zeros(len(x['text']), dtype=bool)
-        noise_indicator[np.random.choice(len(x['text']), noise_len, replace=False)] = True
+        noise_len = int(len(x) * ratio)
+        noise_indicator = np.zeros(len(x), dtype=bool)
+        noise_indicator[np.random.choice(len(x), noise_len, replace=False)] = True
         noised = ""
-        for i, c in enumerate(x['text']):
+        for i, c in enumerate(x):
             if noise_indicator[i]:
-                noised += ''.join([chr(np.random.randint(32, 177))])
+                # 32 ~ 63, 96 ~ 126
+                rnd = np.random.randint(32 + 31)
+                if rnd >= 32:
+                    rnd += 96 - 32
+                else:
+                    rnd += 32
+                noised += chr(rnd)
             else:
                 noised += c
-        x['text'] = noised
-        return x
+        return noised
     
     def generate(self, df: pd.DataFrame) -> pd.DataFrame:
         """dataframe의 모든 행에 noise를 추가한다.
@@ -54,5 +59,5 @@ class NoiseGeneratorASCII(NoiseGenerator):
         Returns:
             pd.DataFrame: noise가 추가된 dataframe
         """
-        noised = df.applymap(self._add_noise)
-        return noised
+        df.loc[:, "text"] = df["text"].map(self._add_noise)
+        return df
