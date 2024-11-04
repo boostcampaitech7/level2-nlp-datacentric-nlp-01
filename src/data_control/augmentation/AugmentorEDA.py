@@ -98,8 +98,10 @@ class EasyDataAugmentation(Augmentor):
         # 모든 augmented 행들을 DataFrame으로 변환
         if all_augmented_rows:
             augmented_data = pd.DataFrame(all_augmented_rows)
+            
             # 원본 데이터와 augmented 데이터를 합침
             result_df = pd.concat([augmented_df, augmented_data], ignore_index=True)
             return result_df
+            # return augmented_data
         
         return augmented_df

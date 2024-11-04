@@ -1,5 +1,6 @@
 data/test.csv
 data/train.csv
+data/*.csv
 data/sample_submission.csv
 output/
 wandb/
