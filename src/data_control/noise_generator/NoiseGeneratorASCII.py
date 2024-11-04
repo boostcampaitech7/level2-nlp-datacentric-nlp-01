@@ -59,5 +59,5 @@ class NoiseGeneratorASCII(NoiseGenerator):
         Returns:
             pd.DataFrame: noise가 추가된 dataframe
         """
-        df["text"] = df["text"].map(self._add_noise)
+        df.loc[:, "text"] = df["text"].map(self._add_noise)
         return df
