@@ -27,9 +27,9 @@ class ModuleTester:
             generator (Optional[NoiseGenerator], optional): 노이즈 생성기. Defaults to None.
             detector (Optional[NoiseDetector], optional): 노이즈 감지기. Defaults to None.
             corrector (Optional[LabelCorrector], optional): 레이블 교정기. Defaults to None.
-            convertor (Optional[NoiseConverter], optional): 레이블 변환기. Defaults to None.
+            convertor (Optional[NoiseConverter], optional): 노이즈 복원기. Defaults to None.
             augmentor (Optional[Augmentor], optional): 데이터 증강기. Defaults to None.
-            aug_after_convert (bool, optional): (noisy) 레이블을 변환한 후에 증강을 시도합니다. 레이블 교정기가 학습할 데이터의 양이 늘어납니다. Defaults to True.
+            aug_after_convert (bool, optional): (noisy) 노이즈를 복원한 후에 증강을 시도합니다. 레이블 교정기가 학습할 데이터의 양이 늘어납니다. Defaults to True.
             aug_after_correct (bool, optional): (unnoisy) 레이블을 교정한 후에 증강을 시도합니다. Defaults to True.
             is_mini (bool, optional): 데이터의 개수를 일부만 남깁니다. 연산이 빨리질 수도 있습니다. Defaults to False.
             save_output (bool, optional): dataframe 계산 결과를 csv로 저장합니다. Defaults to True.
@@ -229,7 +229,7 @@ class ModuleTester:
         df_converted_before = df_converted
         df_converted = self._augmentation(self.aug_after_convert, df_converted)
             
-        df_corrected = self.test_corrector(df_unnoised, df_converted)
+        df_corrected = self.test_corrector(df_converted, df_unnoised)
         if df_corrected is None:
             print("Caution: Corrector is not set. Use uncorrected data.")
             df_corrected = df_converted
