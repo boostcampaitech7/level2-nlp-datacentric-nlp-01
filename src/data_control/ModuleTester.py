@@ -19,7 +19,7 @@ class ModuleTester:
                     aug_after_correct: bool = True,
                     is_mini: bool = False,
                     save_output: bool = True,   
-                    output_path: str = "outputs/"
+                    output_path: str = "data/outputs/"
                 ):
         """Data Control 폴더의 각 모듈을 통합하여 테스트하는 Class
 
