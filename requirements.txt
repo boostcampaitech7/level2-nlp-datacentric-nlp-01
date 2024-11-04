@@ -7,3 +7,6 @@ accelerate
 scikit-learn
 ipywidgets
 wandb
+koeda
+konlpy
+JPype1
