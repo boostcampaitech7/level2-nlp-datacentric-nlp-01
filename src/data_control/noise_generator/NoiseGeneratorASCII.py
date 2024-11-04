@@ -5,7 +5,7 @@ from typing import Optional
 
 class NoiseGeneratorASCII(NoiseGenerator):
     
-    def __init__(self, ratio: Optional[float], 
+    def __init__(self, ratio: Optional[float] = None, 
                  min_ratio: float = 0.2, 
                  max_ratio: float = 0.8):
         """문자열의 일정 비율을 ASCII로 변환하여 noise를 추가한다.
