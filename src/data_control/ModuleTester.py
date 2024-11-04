@@ -210,34 +210,51 @@ class ModuleTester:
                 ], pd.DataFrame                       : 최종 dataframe
             ]
         """
+        # 먼저 detector로 noise가 있는 데이터와 없는 데이터로 나누어줍니다.
         df_noised, df_unnoised = self.test_detector(df)
         
         if self.is_mini:
+            # mini 모드일 경우 데이터를 일부만 남깁니다.
             df_noised = self._cut_mini(df_noised)
             df_unnoised = self._cut_mini(df_unnoised)
         
+        # generator로 원래 noise가 없는 데이터에 noise를 추가한 df를 저장합니다.
         df_added = self.test_generator(df_unnoised)
         if df_noised is None:
+            # detector가 설정되어 있지 않으면 df_noised가 None입니다.
+            # 편의상 모든 데이터를 noise가 없는 데이터로 설정합니다.
             print("Caution: Detector is not set. Label of noised data may be incorrect.")
             df_noised = df_added
         
+        # converter로 noise를 복원한 데이터를 저장합니다.
         df_converted = self.test_converter(df_noised)
         if df_converted is None:
+            # convertor가 설정되어 있지 않으면 df_converted가 None입니다.
+            # 편의상 noise가 있는 데이터를 그대로 사용합니다.
             print("Caution: Convertor is not set. Use unconverted data.")
             df_converted = df_noised
         
-        df_converted_before = df_converted
+        df_converted_before = df_converted # converter의 증강 전 데이터를 저장합니다.
+        
+        # 만약, aug_after_convert가 True라면 복원한 데이터에 대해 증강을 시도합니다.
         df_converted = self._augmentation(self.aug_after_convert, df_converted)
-            
+        
+        # 복원한 데이터를 기반으로 corrector를 학습시켜 noise가 없는 데이터의 레이블을 교정합니다. 
+        # 참고: noise가 있는 데이터는 레이블이 그대로이며, noise가 없는 데이터는 레이블을 확신할 수 없습니다.
         df_corrected = self.test_corrector(df_converted, df_unnoised)
         if df_corrected is None:
+            # corrector가 설정되어 있지 않으면 df_corrected가 None입니다.
+            # 편의상 복원한 데이터를 그대로 사용합니다.
             print("Caution: Corrector is not set. Use uncorrected data.")
             df_corrected = df_converted
         
-        df_corrected_before = df_corrected
+        df_corrected_before = df_corrected # corrector의 증강 전 데이터를 저장합니다.
+        
+        # 만약, aug_after_correct가 True라면 교정한 데이터에 대해 증강을 시도합니다.
         df_corrected = self._augmentation(self.aug_after_correct, df_corrected)
         df_converted = self._augmentation(self.aug_after_correct and not self.aug_after_convert, df_converted)
 
+        # 최종적으로 '복원한 데이터'와 '교정한 데이터'를 합쳐서 반환합니다.
         df_concat = pd.concat([df_converted, df_corrected], axis=0)
         return (
                 (df_noised, df_unnoised), # Result of detector
