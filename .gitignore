@@ -5,3 +5,4 @@ output/
 wandb/
 
 __pycache__/
+/data
