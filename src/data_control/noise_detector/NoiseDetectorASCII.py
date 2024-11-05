@@ -20,7 +20,7 @@ class NoiseDetectorASCII(NoiseDetector):
         Returns:
             float: 얼마나 noise인지 나타내는 값
         """
-        ascii_ratio = sum([(32 <= ord(c) and ord(c) <= 63) or (96 <= ord(c) and ord(c) <= 126) for c in x['text']]) / len(x["text"])
+        ascii_ratio = sum([(32 <= ord(c) and ord(c) <= 126) for c in x['text']]) / len(x["text"])
         return ascii_ratio
     
     def detect(self, df: pd.DataFrame) -> pd.DataFrame:

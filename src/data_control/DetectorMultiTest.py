@@ -39,6 +39,7 @@ def test_multi_detector():
     df = pd.read_csv('data/train.csv')
     
     classes = [NoiseDetectorASCII, ASCIIwithoutSpace]
+    # [0.3828125, 0.2578125]
     
     for _, class_now in enumerate(classes):
         print(f"Name: {class_now.__name__}")
