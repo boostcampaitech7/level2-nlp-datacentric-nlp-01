@@ -8,7 +8,7 @@ from datasets import load_dataset, Dataset
 from googletrans import Translator
 import time
 import deepl
-from Augmentor import Augmentor
+from .Augmentor import Augmentor
 
 class BackTranslator(Augmentor):
     def __init__(self, type="google", loop=1, lang="en", batch_size=16, deepl_api_key=None):

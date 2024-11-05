@@ -3,6 +3,9 @@ from src.data_control.noise_detector.NoiseDetector import NoiseDetector
 from src.data_control.noise_converter.NoiseConverter import NoiseConverter
 from src.data_control.label_corrector.LabelCorrector import LabelCorrector
 from src.data_control.augmentation.Augmentor import Augmentor
+from src.data_control.noise_detector.NoiseDetectorASCII import NoiseDetectorASCII
+from src.data_control.augmentation.AugmentorBT import BackTranslator
+
 from typing import Optional, Tuple
 import pandas as pd
 import os
@@ -264,3 +267,67 @@ class ModuleTester:
                 (df, df_concat) # Result of augmentation
             ), df_concat # Result of all
         
+    def recover_noise_with_backtranslation(
+        self,
+        df: pd.DataFrame,
+        n_samples: int = 100,
+        translator_type: str = "google",
+        api_key: str = None,
+        target_lang: str = "en"
+    ) -> pd.DataFrame:
+        """ASCII 비율이 낮은 데이터를 역번역으로 복구합니다.
+
+        Args:
+            df (pd.DataFrame): 입력 데이터프레임
+            n_samples (int): 복구할 샘플 수
+            translator_type (str): 번역기 종류 ("google" 또는 "deepl")
+            api_key (str): DeepL API 키 (DeepL 사용시 필요)
+            target_lang (str): 중간 번역 언어 코드
+
+        """
+        # 노이즈 탐지기 초기화
+        noise_detector = NoiseDetectorASCII()
+        
+        # ASCII 비율이 가장 낮은 n개 행 추출
+        low_noisy_dates = noise_detector.get_lowest_ascii_rows(df, n=n_samples)
+        self._save_if_can(low_noisy_dates, "before_datas.csv")
+        
+        # 역번역기 초기화
+        back_translator = BackTranslator(
+            type=translator_type,
+            loop=1,
+            lang=target_lang,
+            batch_size=16,
+            deepl_api_key=api_key
+        )
+        
+        # 역번역 수행
+        recovered_rows = back_translator.augment(low_noisy_dates)
+        self._save_if_can(recovered_rows, "after_datas.csv")
+        
+        return recovered_rows
+
+if __name__ == "__main__":
+    # ModuleTester 초기화
+    tester = ModuleTester(
+        save_output=True,
+        output_path="data/outputs/"
+    )
+    
+    # 데이터 로드
+    df = pd.read_csv("/data/ephemeral/home/ksw/level2-nlp-datacentric-nlp-01/data/train.csv")  # 실제 데이터 경로로 수정
+    
+    print("역번역 증강 시작...")
+    
+    # Google Translate로 증강
+    augmented_df = tester.recover_noise_with_backtranslation(
+        df=df,
+        n_samples=1200,
+        translator_type="google",
+        target_lang="en"
+    )
+    
+    # 결과 확인
+    print(f"원본 데이터 크기: {len(df)}")
+    print(f"선택된 데이터 크기: 100")
+    print(f"증강된 데이터 크기: {len(augmented_df)}")        
