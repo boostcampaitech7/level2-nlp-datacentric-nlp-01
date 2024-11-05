@@ -7,6 +7,20 @@ class NoiseConverterLLM(NoiseConverter):
                  temperature: float = 1.0,
                  top_p: float = 1.0,
                  top_k: int = -1,):
+        """vLLM을 활용하기 위한 초기화 작업
+
+        Args:
+            model_name (str, optional): 사용할 LLM모델 이름. Defaults to "NCSOFT/Llama-VARCO-8B-Instruct".
+            temperature (float, optional): 모델이 다음 단어를 선택할 때의 랜덤성을 조절.
+                                            창의적인 답변이 필요할 때는 값을 높이고, 일관성 있는 답변이 필요할 때는 낮춥니다.
+                                            Defaults to 1.0.
+            top_p (float, optional): 누적 확률이 p 이하가 될 때까지 상위 토큰 후보를 샘플링.
+                                        p가 낮을 수록 상위 확률을 가진 토큰만 샘플링하여 더 자연스럽게 출력합니다.
+                                        Defaults to 1.0.
+            top_k (int, optional): k개의 상위 확률을 가진 토큰 중에서만 선택.
+                                    특정 수의 상위 토큰에서만 샘플링하여 출력을 제어할 때 사용합니다.
+                                    Defaults to -1.
+        """
         self.model_name = model_name
         self.llm = LLM(model=model_name, dtype="float16")
         self.sampling_params = SamplingParams(temperature=temperature,
@@ -14,6 +28,15 @@ class NoiseConverterLLM(NoiseConverter):
                                             top_k=top_k)
         
     def convert(self, df: pd.DataFrame, prompt: str) -> pd.DataFrame:
+        """노이즈가 존재하는 dataframe을 받아 입력한 프롬프트로 노이즈를 복원하여 반환하는 function
+
+        Args:
+            df (pd.DataFrame): 모든 행에 noise가 존재하는 dataframe
+            prompt (str): LLM의 입력으로 줄 프롬프트
+
+        Returns:
+            pd.DataFrame: noise가 복원된 dataframe
+        """
         # 데이터프레임의 각 행을 반복하여 프롬프트 생성 및 텍스트 복구 실행
         prompts = []
         for text in df['text']:
