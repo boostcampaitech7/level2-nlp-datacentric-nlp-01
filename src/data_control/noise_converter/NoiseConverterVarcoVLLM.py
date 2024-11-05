@@ -2,7 +2,7 @@ from src.data_control.noise_converter.NoiseConverter import NoiseConverter
 import pandas as pd
 from vllm import LLM, SamplingParams
 
-class NoiseConverterLLM(NoiseConverter):
+class NoiseConverterVarcoVLLM(NoiseConverter):
     def __init__(self, model_name: str = "NCSOFT/Llama-VARCO-8B-Instruct",
                  temperature: float = 1.0,
                  top_p: float = 1.0,
@@ -27,12 +27,11 @@ class NoiseConverterLLM(NoiseConverter):
                                             top_p=top_p,
                                             top_k=top_k)
         
-    def convert(self, df: pd.DataFrame, prompt: str) -> pd.DataFrame:
+    def convert(self, df: pd.DataFrame) -> pd.DataFrame:
         """노이즈가 존재하는 dataframe을 받아 입력한 프롬프트로 노이즈를 복원하여 반환하는 function
 
         Args:
             df (pd.DataFrame): 모든 행에 noise가 존재하는 dataframe
-            prompt (str): LLM의 입력으로 줄 프롬프트
 
         Returns:
             pd.DataFrame: noise가 복원된 dataframe
@@ -40,8 +39,7 @@ class NoiseConverterLLM(NoiseConverter):
         # 데이터프레임의 각 행을 반복하여 프롬프트 생성 및 텍스트 복구 실행
         prompts = []
         for text in df['text']:
-            # prompt = f"문장의 일부분이 다음과 같이 아스키 코드로 대체되어 노이즈가 있어. 노이즈가 있는 문장: 한선]I 평정심U순위 싸움에3신경1쓰F,페이스를 %어요\n이 문장을 원래 문장으로 복구하면 다음과 같아. 복구된 문장: 한선수의 평정심 순위 싸움에 신경 쓰면 페이스를 잃어요\n그럼 이렇게 노이즈가 있는 문장을 복구해줘. 노이즈가 있는 문장: {text}\n복구된 문장: "
-            prompt = f"{prompt}{text}"
+            prompt = f"문장의 일부분이 다음과 같이 아스키 코드로 대체되어 노이즈가 있어. 노이즈가 있는 문장: 한선]I 평정심U순위 싸움에3신경1쓰F,페이스를 %어요\n이 문장을 원래 문장으로 복구하면 다음과 같아. 복구된 문장: 한선수의 평정심 순위 싸움에 신경 쓰면 페이스를 잃어요\n그럼 이렇게 노이즈가 있는 문장을 복구해줘. 노이즈가 있는 문장: {text}\n복구된 문장: "
             prompts.append(prompt)
         
         # LLM을 사용하여 텍스트 생성
