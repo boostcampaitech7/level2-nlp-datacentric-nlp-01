@@ -8,8 +8,8 @@ scikit-learn
 ipywidgets
 wandb
 vllm
-langchain
-langchain-google-genai
+# langchain
+# langchain-google-genai
 koeda
 konlpy
 JPype1
