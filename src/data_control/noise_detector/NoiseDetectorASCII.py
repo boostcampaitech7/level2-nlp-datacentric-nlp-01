@@ -46,4 +46,31 @@ class NoiseDetectorASCII(NoiseDetector):
         """
         not_noised = df[df.apply(lambda x: not self._is_noised(x), axis=1)]
         return not_noised
-    
+    def get_ratio(self, df: pd.DataFrame) -> pd.DataFrame:
+        """dataframe의 각 행에 대한 ASCII 비율을 계산하여 반환합니다.
+
+        Args:
+            df (pd.DataFrame): 입력 dataframe
+
+        Returns:
+            pd.DataFrame: ASCII 비율이 포함된 dataframe
+        """
+        df = df.copy()
+        df['ascii_ratio'] = df.apply(
+            lambda x: sum([31 < ord(c) and ord(c) < 177 for c in x['text']]) / len(x['text']), 
+            axis=1
+        )
+        return df
+
+    def get_lowest_ascii_rows(self, df: pd.DataFrame, n: int = 100) -> pd.DataFrame:
+        """ASCII 비율이 가장 낮은 n개의 행을 반환합니다.
+
+        Args:
+            df (pd.DataFrame): 입력 dataframe
+            n (int): 반환할 행의 수
+
+        Returns:
+            pd.DataFrame: ASCII 비율이 가장 낮은 n개의 행
+        """
+        df_with_ratios = self.get_ratio(df)
+        return df_with_ratios.sort_values('ascii_ratio').head(n).drop('ascii_ratio', axis=1)    
