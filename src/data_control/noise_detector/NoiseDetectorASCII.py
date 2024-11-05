@@ -11,17 +11,17 @@ class NoiseDetectorASCII(NoiseDetector):
         """
         self.ascii_threshold = ascii_threshold
     
-    def _is_noised(self, x: pd.Series) -> bool:
-        """dataframe의 한 행이 noise인지 판단한다.
+    def _noise_score(self, x: pd.Series) -> float:
+        """dataframe의 한 행으로부터 noise 점수를 계산한다.
 
         Args:
             x (pd.Series): dataframe의 한 행
 
         Returns:
-            bool: noise이면 True, 아니면 False
+            float: 얼마나 noise인지 나타내는 값
         """
         ascii_ratio = sum([(32 <= ord(c) and ord(c) <= 63) or (96 <= ord(c) and ord(c) <= 126) for c in x['text']]) / len(x["text"])
-        return ascii_ratio >= self.ascii_threshold
+        return ascii_ratio
     
     def detect(self, df: pd.DataFrame) -> pd.DataFrame:
         """dataframe에서 noise가 있는 데이터를 탐지한다.
@@ -32,7 +32,7 @@ class NoiseDetectorASCII(NoiseDetector):
         Returns:
             pd.DataFrame: noise가 있다고 판단된 데이터로만 이루어진 dataframe
         """
-        noised = df[df.apply(lambda x: self._is_noised(x), axis=1)]
+        noised = df[df.apply(lambda x: self._noise_score(x) >= self.ascii_threshold, axis=1)]
         return noised
     
     def detect_not(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -44,6 +44,6 @@ class NoiseDetectorASCII(NoiseDetector):
         Returns:
             pd.DataFrame: noise가 없다고 판단된 데이터로만 이루어진 dataframe
         """
-        not_noised = df[df.apply(lambda x: not self._is_noised(x), axis=1)]
+        not_noised = df[df.apply(lambda x: self._noise_score(x) < self.ascii_threshold, axis=1)]
         return not_noised
     
