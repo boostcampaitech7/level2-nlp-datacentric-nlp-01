@@ -39,13 +39,7 @@ class NoiseGeneratorASCII(NoiseGenerator):
         noised = ""
         for i, c in enumerate(x):
             if noise_indicator[i]:
-                # 32 ~ 63, 96 ~ 126
-                rnd = np.random.randint(32 + 31)
-                if rnd >= 32:
-                    rnd += 96 - 32
-                else:
-                    rnd += 32
-                noised += chr(rnd)
+                rnd = np.random.randint(32, 127)
             else:
                 noised += c
         return noised
