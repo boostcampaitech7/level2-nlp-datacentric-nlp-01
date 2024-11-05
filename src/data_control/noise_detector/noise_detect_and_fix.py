@@ -20,8 +20,8 @@ from tqdm import tqdm  # tqdm 임포트
 
 # Load the split dataset
 # 각자 파일 명에 맞게 변경
-input_file = "train_split_1.csv"
-output_file = "clean_train_1.csv"
+input_file = "/data/ephemeral/home/hsk/level2-nlp-datacentric-nlp-01/src/data_control/augmentation/train_split_2.csv"
+output_file = "clean_train_2.csv"
 data = pd.read_csv(input_file)
 
 # Placeholder for the cleaned data
@@ -85,9 +85,9 @@ def clean_text_with_model(text, label):
     {"role": "user", "content": "text: '이통Y사f갤럭시탭Sr 오늘w터L사전예약 시작'\nlabel: 4"},
     {"role": "assistant", "content": "text: '이통3사, 갤럭시탭S7 오늘부터 사전예약 시작'\nlabel: 4\nnoise: 1"},
     {"role": "user", "content": "text: 'T시판 H성선물 하반기 p율·유가U망 세미나'\nlabel: 5"},
+    {"role": "assistant", "content": "text: '한국거래소, 선물 하반기 금리·유가전망 세미나'\nlabel: 5\nnoise: 1"},
     {"role": "user", "content": "text: '與 김재수 해임건의안 제출에 옹졸한 정치보복성 공세종합'\nlabel: 2"},
     {"role": "assistant", "content": "text: '與 김재수 해임건의안 제출에 옹졸한 정치보복성 공세종합'\nlabel: 2\nnoise: 0"},
-    {"role": "assistant", "content": "text: '한국거래소, 선물 하반기 금리·유가전망 세미나'\nlabel: 5\nnoise: 1"},
     {"role": "user", "content": "text: '중국의 해외투자 안전도I평가서 Z국 O위→=_위t추락'\nlabel: 6"},
     {"role": "assistant", "content": "text: '중국의 해외투자 안전도 평가서 미국 4위→14위 추락'\nlabel: 6\nnoise: 1"},
     {"role": "user", "content": "text: '박상R·w}욱 c 시B 6권 현대문학 *s시 즈 첫^출간'\nlabel: 5"},
@@ -99,9 +99,9 @@ def clean_text_with_model(text, label):
     {"role": "user", "content": "text: '北0대! 김정*2향한 '성경쟁 무대된l릴레이r토론''\nlabel: 2"},
     {"role": "assistant", "content": "text: '北 20대 김정은 향한 충성경쟁 무대된 릴레이 토론'\nlabel: 2\nnoise: 1"},
     {"role": "user", "content": "text: '안경은%X: 보O기i 안되고…경찰관 공채u신체3준 논란'\nlabel: 3"},
+    {"role": "assistant", "content": "text: '안경은 OK, 보청기는 안되고…경찰관 공채 신체기준 논란'\nlabel: 3\nnoise: 1"},
     {"role": "user", "content": "text: '이녹스 1분기 영업이익 17억원…76% 감소'\nlabel: 3"},
     {"role": "assistant", "content": "text: '이녹스 1분기 영업이익 17억원…76% 감소'\nlabel: 3\nnoise: 0"},
-    {"role": "assistant", "content": "text: '안경은 OK, 보청기는 안되고…경찰관 공채 신체기준 논란'\nlabel: 3\nnoise: 1"},
     {"role": "user", "content": "text: '위클리 스마트d스트레8E~N엔 휴,·면역강화엔 명상 과C적 l증'\nlabel: 4"},
     {"role": "assistant", "content": "text: '위클리 스마트폰 스트레스엔 휴대폰·면역강화엔 명상 과학적 입증'\nlabel: 4\nnoise: 1"},
     {"role": "user", "content": "text: '국토h 공동주택 관리 n우수0지에M서울 텐r힐 1단지'\nlabel: 5"},
