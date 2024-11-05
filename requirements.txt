@@ -7,5 +7,6 @@ accelerate
 scikit-learn
 ipywidgets
 wandb
+vllm
 langchain
 langchain-google-genai
