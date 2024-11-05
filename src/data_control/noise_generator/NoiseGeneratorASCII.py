@@ -40,6 +40,7 @@ class NoiseGeneratorASCII(NoiseGenerator):
         for i, c in enumerate(x):
             if noise_indicator[i]:
                 rnd = np.random.randint(32, 127)
+                noised += chr(rnd)
             else:
                 noised += c
         return noised
