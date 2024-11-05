@@ -304,5 +304,30 @@ class ModuleTester:
         # 역번역 수행
         recovered_rows = back_translator.augment(low_noisy_dates)
         self._save_if_can(recovered_rows, "after_datas.csv")
-
         
+        return recovered_rows
+
+if __name__ == "__main__":
+    # ModuleTester 초기화
+    tester = ModuleTester(
+        save_output=True,
+        output_path="data/outputs/"
+    )
+    
+    # 데이터 로드
+    df = pd.read_csv("/data/ephemeral/home/ksw/level2-nlp-datacentric-nlp-01/data/train.csv")  # 실제 데이터 경로로 수정
+    
+    print("역번역 증강 시작...")
+    
+    # Google Translate로 증강
+    augmented_df = tester.recover_noise_with_backtranslation(
+        df=df,
+        n_samples=1000,
+        translator_type="google",
+        target_lang="en"
+    )
+    
+    # 결과 확인
+    print(f"원본 데이터 크기: {len(df)}")
+    print(f"선택된 데이터 크기: 100")
+    print(f"증강된 데이터 크기: {len(augmented_df)}")        

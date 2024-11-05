@@ -8,7 +8,7 @@ from datasets import load_dataset, Dataset
 from googletrans import Translator
 import time
 import deepl
-from Augmentor import Augmentor
+from .Augmentor import Augmentor
 
 class BackTranslator(Augmentor):
     def __init__(self, type="google", loop=1, lang="en", batch_size=16, deepl_api_key=None):
@@ -130,8 +130,11 @@ class BackTranslator(Augmentor):
             'target': target_labels
         })
 
-        # 원본 데이터와 병합하여 반환
-        return pd.concat([df, augmented_df], ignore_index=True)
+        # 반환 전 확인
+        result_df = pd.concat([df, augmented_df], ignore_index=True)
+        if result_df.empty:
+            print("경고: 빈 DataFrame이 생성되었습니다")
+        return result_df  # 명시적으로 반환
 
 def test_augmentation():
     """테스트를 위한 실행 함수"""
