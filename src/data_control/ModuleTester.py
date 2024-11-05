@@ -1,8 +1,8 @@
-from src.data_control.noise_generator.NoiseGenerator import NoiseGenerator
-from src.data_control.noise_detector.NoiseDetector import NoiseDetector
-from src.data_control.noise_converter.NoiseConverter import NoiseConverter
-from src.data_control.label_corrector.LabelCorrector import LabelCorrector
-from src.data_control.augmentation.Augmentor import Augmentor
+from .noise_generator.NoiseGenerator import NoiseGenerator
+from .noise_detector.NoiseDetector import NoiseDetector
+from .noise_converter.NoiseConverter import NoiseConverter
+from .label_corrector.LabelCorrector import LabelCorrector
+from .augmentation.Augmentor import Augmentor
 from typing import Optional, Tuple
 import pandas as pd
 import os
@@ -264,3 +264,29 @@ class ModuleTester:
                 (df, df_concat) # Result of augmentation
             ), df_concat # Result of all
         
+def module_test():
+    from .noise_detector import NoiseDetectorASCII
+    from .noise_generator import NoiseGeneratorASCII
+    
+    tester = ModuleTester(
+        generator=NoiseGeneratorASCII(),
+        detector=NoiseDetectorASCII(),
+        # corrector=label_corrector.LabelCorrector(),
+        # convertor=noise_converter.NCGoogleGenAI(),
+        # augmentor=augmentation.Augmentor(),
+    )
+    
+    df = pd.read_csv('data/train.csv')
+    
+    results, df_new = tester.test(df)
+    
+    result_detector, result_generator, result_converter, result_corrector, result_augmentor = results
+    
+    det_noisy, det_unnoisy = result_detector 
+    gen_bef, gen_aft = result_generator
+    conv_bef, conv_aft = result_converter
+    corr_bef, corr_aft = result_corrector
+    augm_bef, augm_aft = result_augmentor
+    
+if __name__ == "__main__":
+    module_test()
