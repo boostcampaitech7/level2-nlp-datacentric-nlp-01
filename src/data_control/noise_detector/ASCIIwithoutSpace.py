@@ -1,10 +1,10 @@
 from src.data_control.noise_detector.NoiseDetector import NoiseDetector
 import pandas as pd
 
-class NoiseDetectorASCII(NoiseDetector):
+class ASCIIwithoutSpace(NoiseDetector):
     
     def __init__(self, ascii_threshold: float = 0.25):
-        """ASCII 문자의 비율이 threshold 이상인 데이터를 noise로 판단한다.
+        """ASCII 문자의 비율이 threshold 이상인 데이터를 noise로 판단한다. (단, 공백을 모두 제거한 후 비율을 계산한다.)
 
         Args:
             ascii_threshold (float): noise로 판단할 ASCII 문자의 비율
@@ -20,6 +20,7 @@ class NoiseDetectorASCII(NoiseDetector):
         Returns:
             float: 얼마나 noise인지 나타내는 값
         """
+        x["text"] = ''.join(x["text"].split())
         ascii_ratio = sum([(32 <= ord(c) and ord(c) <= 63) or (96 <= ord(c) and ord(c) <= 126) for c in x['text']]) / len(x["text"])
         return ascii_ratio
     
