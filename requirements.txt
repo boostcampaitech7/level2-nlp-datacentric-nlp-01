@@ -7,3 +7,4 @@ accelerate
 scikit-learn
 ipywidgets
 wandb
+vllm
