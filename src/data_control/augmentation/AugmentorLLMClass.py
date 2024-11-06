@@ -82,3 +82,19 @@ class AugmentorLLM(Augmentor):
         if not only_aug:
             results_df = pd.concat([df, results_df], ignore_index=True)
         return results_df
+    
+def routine_aug_llm():
+    df = pd.read_csv('data/corrected_BLEU.csv')
+    augmentor = AugmentorLLM()
+    aug_df = augmentor.augment(df)
+    aug_df.to_csv('data/augmented_BLEU.csv', index=False)
+    
+def routine_aug_llm_trim():
+    df = pd.read_csv('data/corrected_BLEU.csv')
+    augmentor = AugmentorLLM(prompt='prompts/data-trim.json', code='LLM_Trim')
+    aug_df = augmentor.augment(df)
+    aug_df.to_csv('data/augmented_trim_BLEU.csv', index=False)
+    
+if __name__ == '__main__':
+    routine_aug_llm()
+    routine_aug_llm_trim()
