@@ -2,11 +2,10 @@ from abc import ABC, abstractmethod
 import pandas as pd
 
 class LabelCorrector(ABC):
-    
+
     @abstractmethod
     def train(self, df: pd.DataFrame) -> None:
         """label이 올바른 dataframe을 학습한다.
-
         Args:
             df (pd.DataFrame): noise가 있는 dataframe
         
