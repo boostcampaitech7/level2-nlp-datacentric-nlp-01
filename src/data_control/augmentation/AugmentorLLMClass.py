@@ -32,8 +32,7 @@ class AugmentorLLM(Augmentor):
         
         text = row['text']
         
-        messages = self.prompt
-        messages.append({"role": "user", "content": f"text: '{text}'"})
+        messages = self.prompt + [{"role": "user", "content": f"text: '{text}'"}]
         
         input_ids = self.tokenizer.apply_chat_template(
             messages,
