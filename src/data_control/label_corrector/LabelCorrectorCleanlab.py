@@ -29,6 +29,18 @@ class LabelCorrectorCleanlab(LabelCorrector):
             self.model = model
             self.tokenizer = tokenizer
             self.device = device
+        
+        def train(self, df: pd.DataFrame) -> None:
+            """
+            Cleanlab을 이용해 라벨 교정을 위한 모델을 학습하는 메소드
+            
+            Args:
+                df: 학습 데이터
+                
+            Returns:
+                None
+            """
+            pass
 
         def find_issues(self, df: pd.DataFrame) -> Tuple[np.ndarray, List[int]]:
             """
