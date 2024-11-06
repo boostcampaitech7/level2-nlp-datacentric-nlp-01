@@ -1,5 +1,4 @@
 from src.data_control.label_corrector.LabelCorrector import LabelCorrector
-from config import SEED, DEVICE
 import torch
 
 from cleanlab.filter import find_label_issues
@@ -18,9 +17,18 @@ class LabelCorrectorCleanlab(LabelCorrector):
             seed: random seed
         """
         
-        def __init__(self, model):
+        def __init__(self, model, tokenizer, device):
+            """
+            Cleanlab을 이용한 라벨 교정 클래스 초기화
+
+            Args:
+                model: 학습된 모델
+                tokenizer: 토크나이저
+                device: 사용할 디바이스
+            """
             self.model = model
-            self.seed = SEED
+            self.tokenizer = tokenizer
+            self.device = device
 
         def find_issues(self, df: pd.DataFrame) -> Tuple[np.ndarray, List[int]]:
             """
@@ -33,17 +41,26 @@ class LabelCorrectorCleanlab(LabelCorrector):
                 label_issues: 라벨 이슈가 있는 인덱스 리스트
             """
             
-            self.model.eval().to(DEVICE)
+            self.model.eval().to(self.device)
             
             # 모델을 이용해 라벨 예측하고 확률 계산
+            batch_size = 32  # 배치 크기 설정
+            probs_list = []
+            labels_list = []
+
             with torch.no_grad():
-                data = self.model.tokenizer(df['text'].tolist(), padding='max_length', truncation=True, return_tensors='pt')
-                data = {k: v.to(DEVICE) for k, v in data.items()}
-                outputs = self.model(**data)
-                logits = outputs.logits
-                probs = torch.nn.functional.softmax(logits, dim=-1).cpu().numpy()
-            
-            labels = np.array(df['target'].tolist())
+                for i in range(0, len(df), batch_size):
+                    batch_df = df.iloc[i:i + batch_size]
+                    data = self.tokenizer(batch_df['text'].tolist(), padding='max_length', truncation=True, return_tensors='pt')
+                    data = {k: v.to(self.device) for k, v in data.items()}
+                    outputs = self.model(**data)
+                    logits = outputs.logits
+                    probs = torch.nn.functional.softmax(logits, dim=-1).cpu().numpy()
+                    probs_list.append(probs)
+                    labels_list.extend(batch_df['target'].tolist())
+
+            probs = np.concatenate(probs_list, axis=0)
+            labels = np.array(labels_list)
 
             # Cleanlab을 이용해 라벨 이슈를 찾음
             label_issues = find_label_issues(
@@ -91,9 +108,7 @@ class LabelCorrectorCleanlab(LabelCorrector):
             _, label_issues = self.find_issues(df)
 
             # 라벨 이슈가 있는 인덱스에 대해 제거 작업 수행
-            for idx in label_issues:
-                df.drop(idx, inplace=True)
-                
-                print(f"인덱스 {idx}: 라벨 이슈 제거됨")
+            df = df.drop(label_issues)
+            print(f"Cleanlab을 이용해 {len(label_issues)}개의 이상 라벨을 제거했습니다.")
 
-            return df
+            return df  #수정된 데이터프레임 반환
