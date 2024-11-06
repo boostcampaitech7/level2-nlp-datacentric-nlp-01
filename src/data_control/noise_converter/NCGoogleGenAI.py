@@ -18,9 +18,14 @@ from typing import Optional
 
 class NCGoogleGenAI(NoiseConverter):
     def __init__(self, model_name: str = "gemini-1.5-flash",
+                    system_prompt: str = (
+                        "주어진 모든 문자열은 그 중 일부가 랜덤한 ASCII 문자로 대체되었습니다. 대체된 문자를 원래 문자로 복원하세요.\n"
+                        "또한 다음과 같은 형식으로 답변을 생성해야 합니다: {{ \"Answer\": \"<복원된 문자열>\" }}"
+                    ),
                     few_shots: Optional[pd.DataFrame] = None
                  ):
         self.set_secret_key()
+        self.system_prompt = system_prompt
         self.llm = ChatGoogleGenerativeAI(model = model_name)
         self.few_shots = few_shots
         
@@ -49,11 +54,7 @@ class NCGoogleGenAI(NoiseConverter):
             
         
     def convert(self, df):
-        template = (
-            "주어진 모든 문자열은 그 중 일부가 랜덤한 ASCII 문자로 대체되었습니다. 대체된 문자를 원래 문자로 복원하세요.\n"
-            "또한 다음과 같은 형식으로 답변을 생성해야 합니다: {{ \"Answer\": \"<복원된 문자열>\" }}"
-        )
-        system_msg_prompt = SystemMessagePromptTemplate.from_template(template)
+        system_msg_prompt = SystemMessagePromptTemplate.from_template(self.system_prompt)
         
         # example_prompt = PromptTemplate.from_template(
         #     "Given String:\n{given_string}\nAnswer:\n{answer}"
@@ -86,12 +87,14 @@ class NCGoogleGenAI(NoiseConverter):
             format_instance = parser.get_format_instructions()
         )
         
-        chain = chat_prompt | self.llm | parser 
+        chain = chat_prompt | self.llm | parser
         
         df = df.copy()
-        
+        print(self.make_examples())
         x = []
         for _, row in df.iterrows():
+            # print(chain.invoke({"given_string": row["text"]}))
+            # print(row["text"])
             json = chain.invoke({"given_string": row["text"]})
             x.append(json["Answer"])
         df["text"] = x
