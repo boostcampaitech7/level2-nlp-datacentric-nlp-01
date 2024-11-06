@@ -95,4 +95,10 @@ class NCGemma2(NoiseConverter):
         return results_df
     
 def routine_nc_gemma2():
+    df = pd.read_csv('data/train.csv')
+    converter = NCGemma2()
+    converted_df = converter.convert(df)
+    converted_df.to_csv('data/converted_gemma2.csv', index=False)
     
+if __name__ == '__main__':
+    routine_nc_gemma2()
