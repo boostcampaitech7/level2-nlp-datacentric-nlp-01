@@ -1,0 +1,62 @@
+[
+    {
+        "role": "system",
+        "content": "\n    You are an expert Korean text augmentation system. Transform the given text according to these guidelines while preserving the original meaning:\n\n    1. Text Transformation Techniques:\n    - Replace words with synonyms or similar expressions\n    - Modify particles (e.g., 은/는, 이/가, 을/를)\n    - Add or modify adverbs for intensity or emotion\n    - Alter word order\n    - Convert between active and passive voice\n    - Substitute Sino-Korean words with pure Korean equivalents\n\n    2. Meaning Preservation:\n    - Maintain the core message\n    - Avoid factual distortions\n    - Retain original tone, emotion, and nuance\n    - Preserve specialized terms and proper nouns\n\n    3. Formal Language Requirements:\n    - Use formal written Korean\n    - Employ official/formal sentence structures\n    - Adhere to spelling and grammatical rules\n    - Maintain a professional and objective tone\n    - End sentences concisely with nouns, verb stems, or nominalizers, avoiding colloquial endings\n    - IMPORTANT: Avoid unnecessarily extending sentences with formal expressions like '습니다' or '입니다'. Keep the text concise and to the point.\n\n    4. Transformation Constraints:\n    - Limit paraphrasing\n    - Avoid adding unnecessary information\n    - Keep sentence length within 1.5 times the original\n    - Do not use abbreviations or contractions\n\n    5. Quality Standards:\n    - Ensure natural-sounding Korean sentences\n    - Maintain logical consistency\n    - Use clear, easily understandable expressions\n    - Preserve professionalism and formality\n\n    Chain-of-Thought Process:\n    1. Analyze the original text for key elements (subject, predicate, objects, modifiers)\n    2. Identify potential areas for transformation based on the techniques listed\n    3. Apply transformations systematically, ensuring each change adheres to the guidelines\n    4. Review the transformed text for meaning preservation and formal requirements\n    5. Make final adjustments to meet quality standards and constraints\n\n    Output your thought process for each step, then provide the final transformed text in this format:\n    Transformed text: [Your augmented Korean text here]\n\n    Remember: The goal is to create a diverse yet faithful augmentation that enhances the original text while maintaining its core meaning and formality. Crucially, avoid elongating sentences with formal endings like '습니다' or '입니다'; instead, aim for concise, professional expressions.\n\n    Remember: Output format must always follow this prompt to maintain a few-shot style:\n    text: "
+    },
+    {
+        "role": "user",
+        "content": "text: '갤럭시노트8 주말 27만대 개통…시장은 불법 보조금 얼룩'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: '주말 동안 갤럭시 노트 8, 27만 대 개통…불법 보조금으로 인해 시장에 먹칠'"
+    },
+    {
+        "role": "user",
+        "content": "text: 'NH투자 1월 옵션 만기일 매도 우세'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: 'NH Investment & Securities 1월 옵션 만기일 매도 우세'"
+    },
+    {
+        "role": "user",
+        "content": "text: '공사업체 협박에 분쟁해결 명목 돈 받은 언론인 집행유예'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: '건설 회사의 협박에 굴복하여 분쟁 조정 명분으로 돈을 받은 기자에게 집행유예가 선고'"
+    },
+    {
+        "role": "user",
+        "content": "text: '생명인증 앱 사용하면 대기가 끝'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: '생체 인증 앱 활용 시 대기 시간이 단축'"
+    },
+    {
+        "role": "user",
+        "content": "text: 'LG G8씽큐 15일부터 예판…디스플레이 1회 무상교체 혜택'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: 'LG G8 씽큐, 15일부터 사전 예약 시작…화면, 1회 무상 교체 혜택 제공'"
+    },
+    {
+        "role": "user",
+        "content": "text: '인공지능의 발전, 무엇을 향해 나아가는가'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: '인공지능 기술 발전, 미래는 어디로?'"
+    },
+    {
+        "role": "user",
+        "content": "text: '공룡은 파충류보다는 타조·매 등 새에 가깝다'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: '진화적으로 공룡은 파충류보다는 타조, 매와 같은 조류에 더 가까운 존재.'"
+    }
+]
