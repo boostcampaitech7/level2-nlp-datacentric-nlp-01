@@ -18,8 +18,8 @@ model.eval()
 
 # Load the split dataset
 # 각자 파일 명에 맞게 변경
-input_file = "/data/ephemeral/home/hsk/level2-nlp-datacentric-nlp-01/cleaned_pure.csv"
-output_file = "AUG_LLM.csv"
+input_file = "/data/ephemeral/home/hsk/level2-nlp-datacentric-nlp-01/cleaned_2.csv"
+output_file = "AUG_data_with_LLM.csv"
 data = pd.read_csv(input_file)
 
 
@@ -110,7 +110,7 @@ When creating variations, apply these techniques thoroughly, focusing on extensi
 
     outputs = model.generate(
         input_ids,
-        max_new_tokens=30,
+        max_new_tokens=100,
         eos_token_id=terminators,
         do_sample=True,
         temperature=0.7,
@@ -118,9 +118,11 @@ When creating variations, apply these techniques thoroughly, focusing on extensi
     )
 
     output = tokenizer.decode(outputs[0][input_ids.shape[-1]:], skip_special_tokens=True)
-
+    print('output\n\n', output)
     # Extract values from the output using regex
-    aug_text = re.search(r"text:\s'([^']*)'", output).group(1) if re.search(r"text:\s'([^']*)'", output) else ""
+    aug_text = re.search(r"text:\s*'(.+)'", output)
+    aug_text = aug_text.group(1).strip() if aug_text else ""
+    print('aug_text\n\n', aug_text)
 
 
     return aug_text
@@ -131,7 +133,7 @@ Aug_df = data.copy()
 
 
 for index, row in tqdm(data.iterrows(), total=len(data), desc="Processing rows"):
-    i_d = row["ID"]
+    i_d = row["ID"] + '_LLM'
     text = row["text"]
     label = row["target"]
 
@@ -149,4 +151,4 @@ Aug_df.to_csv(output_file, index=False)
 augmentation_with_llm = pd.DataFrame(Aug_df)
 augmentation_with_llm.to_csv(output_file, index=False)
 
-print(f"Cleaned data saved to {output_file}")
+print(f"aug data saved to {output_file}")
