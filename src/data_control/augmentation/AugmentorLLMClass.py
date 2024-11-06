@@ -66,6 +66,7 @@ class AugmentorLLM(Augmentor):
 
         Args:
             df (pd.DataFrame): 증강할 데이터프레임
+            only_aug (bool): 증강된 데이터만 반환할지 여부 (False면 원본 데이터와 합쳐서 반환)
 
         Returns:
             pd.DataFrame: 데이터 증강 결과
