@@ -15,6 +15,7 @@ class NCGemma2(NoiseConverter):
             torch_dtype=torch.bfloat16,
             device_map="auto",
         )
+        self.model.eval()
         
     def _convert_row(self, row: pd.Series) -> Tuple[str, int, int, Optional[str]]:
         """행 하나에 대해서 노이즈를 복원하는 함수
