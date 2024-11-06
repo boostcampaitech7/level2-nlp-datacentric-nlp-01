@@ -37,8 +37,7 @@ class NCGemma2(NoiseConverter):
         text = row['text']
         label = row['target']
         
-        messages = self.prompt 
-        messages.append({"role": "user", "content": f"text: '{text}'\nlabel: {label}"})
+        messages = self.prompt + [{"role": "user", "content": f"text: '{text}'\nlabel: {label}"}]
         
         input_ids = self.tokenizer.apply_chat_template(
             messages,
