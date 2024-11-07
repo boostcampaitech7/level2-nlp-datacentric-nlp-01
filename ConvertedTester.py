@@ -67,9 +67,14 @@ class ConvertedTester:
             float: 변환기의 성능
         """
         sentences = df['text'].tolist()
-        noised_sentences_df = NoiseGeneratorASCII().generate(df)
+        noised_sentences_df = NoiseGeneratorASCII(ratio = 0.3).generate(df)
         converted_sentences = self.converter.convert(noised_sentences_df)['text'].tolist()
-        
+
+        for i, (original, noised ,converted) in enumerate(zip(sentences, noised_sentences_df['text'].to_list(),converted_sentences)):
+            print(f"Original No.{i}: {original}")
+            print(f"Noised No.{i}: {noised}")
+            print(f"Converted No.{i}: {converted}")
+
         bleu_score = self._calculate_bleu(sentences, converted_sentences)
         rouge_l_score = self._calculate_rouge(sentences, converted_sentences)
         accuracy_score = self._calcuate_accuracy(sentences, converted_sentences)
@@ -80,15 +85,21 @@ class ConvertedTester:
     
 if __name__ == "__main__":
     from src.data_control.noise_converter.NCGemma2 import NCGemma2
+    from src.data_control.noise_converter.NCVarco import NCVarco
 
-    model_ids = ['rtzr/ko-gemma-2-9b-it', 'HumanF-MarkrAI/Gukbap-Gemma2-9B']
-    prompts = ['prompts/gemma-converter.json', 'prompts/gukbap-gemma-converter.json']
+    model_ids = ['rtzr/ko-gemma-2-9b-it', 'HumanF-MarkrAI/Gukbap-Gemma2-9B', 'NCSOFT/Llama-VARCO-8B-Instruct']
+    prompts = ['prompts/gemma-converter.json', 'prompts/gukbap-gemma-converter.json', 'varco-converter.json']
 
     sample_df = pd.read_csv('data/cleaned.csv')
-    sample_df = sample_df[sample_df['noise'] == 0].sample(100, random_state=42)
+    sample_df = sample_df[sample_df['noise'] == 0].sample(10, random_state=42)
 
     for i, model_id in enumerate(model_ids):
-        print(f"Testing {model_id}")
-        converter = NCGemma2(model_id, prompt= prompts[i])
+        if 'gemma' in model_id.lower():
+            print(f"Testing {model_id}")
+            converter = NCGemma2(model_id, prompt= prompts[i])
+        elif 'varco' in model_id.lower():
+            print(f"Testing {model_id}")
+            converter = NCVarco(model_id, prompt= prompts[i])
+        
         tester = ConvertedTester(converter)
         tester.test(sample_df)
