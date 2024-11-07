@@ -19,3 +19,4 @@ dvc[gdrive]
 # dvc remote add -d myremote gdrive://1A2B3C4D5E6F7G8H9I0J
 
 nltk
+kiwipiepy
