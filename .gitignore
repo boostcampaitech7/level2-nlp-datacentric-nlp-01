@@ -1,0 +1,7 @@
+data/*.csv
+data/outputs/*.csv
+output/
+wandb/
+
+__pycache__/
+/data

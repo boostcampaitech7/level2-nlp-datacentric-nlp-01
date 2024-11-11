@@ -1,0 +1,62 @@
+[
+    {
+        "role": "system",
+        "content": "\n    As an AI language model, your task is to generate variations of short, informative texts while maintaining their core meaning and intent. Focus on word substitution and semantic preservation. Follow these guidelines:\n\n    1. Content Preservation:\n    - Retain the main topic and key information of the original text.\n    - Ensure that the core message remains intact in the modified version.\n\n    2. Vocabulary Enhancement (Primary Focus):\n    - Replace as many words as possible with synonyms or near-synonyms.\n    - Use alternative terms that are commonly found in formal, informative writing.\n    - For technical or specialized terms, consider using both Korean and anglicized versions when appropriate.\n    - Aim to substitute at least 30-50% of the content words in each sentence.\n\n    3. Semantic Equivalence:\n    - While changing words, maintain the overall meaning and nuance of the original text.\n    - Ensure that the substituted words convey the same level of specificity or generality as the original.\n\n    4. Grammatical Variation:\n    - Modify particles or conjunctions to fit the new word choices.\n    - Rearrange sentence components while maintaining grammatical correctness.\n    - Switch between active and passive voice when possible and appropriate.\n\n    5. Numerical Representation:\n    - Alternate between Arabic numerals and Korean number words.\n    - Add or remove approximation terms like \"여\" (approximately) to numbers when suitable.\n\n    6. Abbreviation and Expansion:\n    - Expand commonly used abbreviations or contract full terms into abbreviations.\n    - This is particularly useful for organization names or technical terms.\n\n    7. Contextual Consideration:\n    - Be aware of the specific context of Korean current affairs and societal norms.\n    - Ensure that modifications align with common practices in Korean formal writing.\n\n    8. Formality Consistency:\n    - Maintain the level of formality present in the original text.\n    - Use a more formal, concise style typical of informative writing in Korean.\n\n    9. Idiomatic Expression:\n    - Replace or introduce idiomatic expressions when they fit naturally and maintain the tone of the original text.\n\n    10. Multiple Variations:\n        - For each original text, aim to create at least 2-3 distinct variations.\n        - Each variation should differ significantly in word choice from both the original and other variations.\n\n    When creating variations, apply these techniques thoroughly, focusing on extensive word substitution while preserving the core meaning. The goal is to create natural-sounding alternatives that express the same information using different vocabulary and phrasing in Korean."
+    },
+    {
+        "role": "user",
+        "content": "text: '갤럭시노트8 주말 27만대 개통…시장은 불법 보조금 얼룩'"
+    },
+    {
+        "role": "assistant",
+        "content": "augmented_text: '주말 동안 갤럭시 노트 8, 27만 대 개통…불법 보조금으로 인해 시장에 먹칠'"
+    },
+    {
+        "role": "user",
+        "content": "text: 'NH투자 1월 옵션 만기일 매도 우세'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: 'NH Investment & Securities 1월 옵션 만기일 매도 우세'"
+    },
+    {
+        "role": "user",
+        "content": "text: '공사업체 협박에 분쟁해결 명목 돈 받은 언론인 집행유예'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: '건설 회사의 협박에 굴복하여 분쟁 조정 명분으로 돈을 받은 기자에게 집행유예가 선고되었다.'"
+    },
+    {
+        "role": "user",
+        "content": "text: '생명인증 앱 사용하면 대기가 끝'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: '생체 인증 앱 활용 시 대기 시간이 단축됩니다.'"
+    },
+    {
+        "role": "user",
+        "content": "text: 'LG G8씽큐 15일부터 예판…디스플레이 1회 무상교체 혜택'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: 'LG G8 씽큐, 15일부터 사전 예약 시작…화면, 1회 무상 교체 혜택 제공'"
+    },
+    {
+        "role": "user",
+        "content": "text: '인공지능의 발전, 무엇을 향해 나아가는가'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: '인공지능 기술 발전, 미래는 어디로?'"
+    },
+    {
+        "role": "user",
+        "content": "text: '공룡은 파충류보다는 타조·매 등 새에 가깝다'"
+    },
+    {
+        "role": "assistant",
+        "content": "text: '진화적으로 공룡은 파충류보다는 타조, 매와 같은 조류에 더 가까운 존재로 여겨진다.'"
+    }
+]
