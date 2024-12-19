@@ -56,7 +56,7 @@ class ConvertedTester:
                 correct_count += 1
         return correct_count / len(original_sentences)
         
-    def test(self, df: pd.DataFrame) -> Tuple[float, float, float]:
+    def test(self, original_df: pd.DataFrame, noised_df: pd.DataFrame) -> Tuple[float, float, float]:
         """
         주어진 문장들에 대해 변환기의 성능을 테스트하는 메소드
 
@@ -66,8 +66,8 @@ class ConvertedTester:
         Returns:
             float: 변환기의 성능
         """
-        sentences = df['text'].tolist()
-        noised_sentences_df = NoiseGeneratorASCII(ratio = 0.3).generate(df)
+        sentences = original_df['text'].tolist()
+        noised_sentences_df = noised_df.copy()
         converted_sentences = self.converter.convert(noised_sentences_df)['text'].tolist()
 
         for i, (original, noised ,converted) in enumerate(zip(sentences, noised_sentences_df['text'].to_list(),converted_sentences)):
@@ -88,10 +88,11 @@ if __name__ == "__main__":
     from src.data_control.noise_converter.NCVarco import NCVarco
 
     model_ids = ['rtzr/ko-gemma-2-9b-it', 'HumanF-MarkrAI/Gukbap-Gemma2-9B', 'NCSOFT/Llama-VARCO-8B-Instruct']
-    prompts = ['prompts/gemma-converter.json', 'prompts/gukbap-gemma-converter.json', 'varco-converter.json']
+    prompts = ['prompts/gemma-converter.json', 'prompts/gukbap-gemma-converter.json', 'prompts/varco-converter.json']
 
     sample_df = pd.read_csv('data/cleaned.csv')
     sample_df = sample_df[sample_df['noise'] == 0].sample(10, random_state=42)
+    noised_sample_df = NoiseGeneratorASCII(ratio=0.5).generate(sample_df)
 
     for i, model_id in enumerate(model_ids):
         if 'gemma' in model_id.lower():
@@ -102,4 +103,4 @@ if __name__ == "__main__":
             converter = NCVarco(model_id, prompt= prompts[i])
         
         tester = ConvertedTester(converter)
-        tester.test(sample_df)
+        tester.test(sample_df, noised_sample_df)
